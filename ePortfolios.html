@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Full Stack Development — Complete Guide</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Manrope', 'sans-serif'] },
+          colors: {
+            gold: { 100:'#FDEebb', 300:'#F2C94C', 400:'#FFD369', 500:'#E6B800', 600:'#B38F00' },
+            charcoal: { 800:'#1A1A1A', 900:'#0F0F0F', 950:'#050505' }
+          },
+          backgroundImage: {
+            'gold-gradient': 'linear-gradient(135deg, #F2C94C 0%, #E6B800 100%)',
+            'dark-gradient': 'linear-gradient(to bottom, #111111, #050505)',
+            'cinematic-fade': 'radial-gradient(circle at center, rgba(242,201,76,0.08) 0%, transparent 70%)'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    ::selection { background: rgba(242,201,76,0.2); color: #FFD369; }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #050505; }
+    ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #555; }
+    .noise-bg {
+      position: fixed; inset: 0; pointer-events: none; z-index: 50; opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+    @keyframes float { 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(-12px); } }
+    .float-anim { animation: float 4s ease-in-out infinite; }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(40px); } to { opacity:1; transform:translateY(0); } }
+    .fade-up { opacity:0; transform:translateY(40px); transition: all 0.8s cubic-bezier(0.16,1,0.3,1); }
+    .fade-up.visible { opacity:1; transform:translateY(0); }
+    .tab-btn.active { color: #E6B800; border-color: #E6B800; background: rgba(242,201,76,0.08); }
+    .tab-content { display:none; animation: fadeUp 0.5s ease; }
+    .tab-content.active { display:block; }
+    .code-block { background: #0a0a0a; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; overflow: hidden; }
+    .code-block .code-header { background: rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.06); padding: 10px 16px; display:flex; align-items:center; gap:8px; }
+    .code-block .dot { width:12px; height:12px; border-radius:50%; }
+    .code-block pre { padding: 20px; overflow-x: auto; font-size: 14px; line-height: 1.7; }
+    .code-keyword { color: #c792ea; }
+    .code-tag { color: #f07178; }
+    .code-attr { color: #ffcb6b; }
+    .code-string { color: #c3e88d; }
+    .code-comment { color: #546e7a; }
+    .code-prop { color: #82aaff; }
+    .code-func { color: #82aaff; }
+    .code-num { color: #f78c6c; }
+    .progress-bar { height: 6px; background: rgba(255,255,255,0.06); border-radius: 3px; overflow: hidden; }
+    .progress-bar .fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, #F2C94C, #E6B800); transition: width 1.5s cubic-bezier(0.16,1,0.3,1); width: 0; }
+    .progress-bar.visible .fill { width: var(--w); }
+  </style>
+</head>
+<body class="bg-charcoal-950 text-white font-sans antialiased">
+  <div class="noise-bg"></div>
+
+  <!-- NAVBAR -->
+  <nav id="navbar" class="fixed top-0 w-full z-40 transition-all duration-500 py-4 px-6 backdrop-blur-md bg-charcoal-950/80 border-b border-white/5">
+    <div class="container mx-auto flex items-center justify-between max-w-7xl">
+      <a href="#" class="flex items-center gap-2 group">
+        <div class="w-8 h-8 bg-gold-gradient rounded-lg flex items-center justify-center">
+          <iconify-icon icon="lucide:layers" width="18" class="text-charcoal-900"></iconify-icon>
+        </div>
+        <span class="text-lg font-semibold tracking-tight">FullStack<span class="text-gold-400">.guide</span></span>
+      </a>
+      <div class="hidden md:flex items-center gap-8">
+        <a href="#what" class="text-sm text-neutral-400 hover:text-gold-300 transition-colors duration-300">What is FSD?</a>
+        <a href="#html" class="text-sm text-neutral-400 hover:text-gold-300 transition-colors duration-300">HTML</a>
+        <a href="#css" class="text-sm text-neutral-400 hover:text-gold-300 transition-colors duration-300">CSS</a>
+        <a href="#bootstrap" class="text-sm text-neutral-400 hover:text-gold-300 transition-colors duration-300">Bootstrap</a>
+        <a href="#js" class="text-sm text-neutral-400 hover:text-gold-300 transition-colors duration-300">JavaScript</a>
+        <a href="#roadmap" class="text-sm text-neutral-400 hover:text-gold-300 transition-colors duration-300">Roadmap</a>
+      </div>
+      <button id="mobileMenuBtn" class="md:hidden text-neutral-400 hover:text-white transition-colors">
+        <iconify-icon icon="lucide:menu" width="24"></iconify-icon>
+      </button>
+    </div>
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="hidden md:hidden mt-4 pb-4 border-t border-white/5 pt-4 flex flex-col gap-3">
+      <a href="#what" class="text-sm text-neutral-400 hover:text-gold-300 transition-colors px-2 py-1">What is FSD?</a>
+      <a href="#html" class="text-sm text-neutral-400 hover:text-gold-300 transition-colors px-2 py-1">HTML</a>
+      <a href="#css" class="text-sm text-neutral-400 hover:text-gold-300 transition-colors px-2 py-1">CSS</a>
+      <a href="#bootstrap" class="text-sm text-neutral-400 hover:text-gold-300 transition-colors px-2 py-1">Bootstrap</a>
+      <a href="#js" class="text-sm text-neutral-400 hover:text-gold-300 transition-colors px-2 py-1">JavaScript</a>
+      <a href="#roadmap" class="text-sm text-neutral-400 hover:text-gold-300 transition-colors px-2 py-1">Roadmap</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="min-h-screen pt-20 flex items-center relative overflow-hidden">
+    <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gold-500/10 rounded-full blur-[120px] pointer-events-none"></div>
+    <div class="absolute bottom-0 right-0 w-72 h-72 bg-gold-500/5 rounded-full blur-[100px] pointer-events-none"></div>
+    <div class="container mx-auto max-w-7xl px-6 grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+      <!-- Left -->
+      <div class="fade-up">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-gold-500/30 bg-gold-500/5 mb-8">
+          <span class="w-2 h-2 rounded-full bg-gold-400 animate-pulse"></span>
+          <span class="text-xs font-medium tracking-wide text-gold-300">Complete Learning Path</span>
+        </div>
+        <h1 class="text-5xl lg:text-7xl font-semibold leading-[1.1] tracking-tighter mb-6">
+          Dhiraj<br/><span class="bg-clip-text text-transparent bg-gold-gradient">Pasman</span>
+        </h1>
+        <p class="text-neutral-400 font-light leading-relaxed text-lg max-w-lg mb-10">
+          Master the complete web development stack — from structuring content with HTML to building interactive experiences with JavaScript. Everything you need in one guide.
+        </p>
+        <div class="flex flex-wrap gap-4">
+          <a href="#what" class="group inline-flex items-center gap-2 px-8 py-4 bg-gold-gradient text-charcoal-900 font-semibold rounded-xl hover:-translate-y-1 transition-all duration-300 shadow-[0_0_40px_-10px_rgba(242,201,76,0.5)] hover:shadow-[0_0_60px_-10px_rgba(242,201,76,0.7)]">
+            Start Learning
+            <iconify-icon icon="lucide:arrow-down" width="18" class="group-hover:translate-y-0.5 transition-transform"></iconify-icon>
+          </a>
+          <a href="#roadmap" class="inline-flex items-center gap-2 px-8 py-4 border border-white/10 text-white font-medium rounded-xl hover:bg-white/5 hover:-translate-y-1 transition-all duration-300">
+            View Roadmap
+          </a>
+        </div>
+        <!-- Stats -->
+        <div class="grid grid-cols-3 gap-6 mt-14 pt-8 border-t border-white/10">
+          <div>
+            <div class="text-2xl font-semibold text-gold-400">4</div>
+            <div class="text-xs text-neutral-500 mt-1">Core Topics</div>
+          </div>
+          <div>
+            <div class="text-2xl font-semibold text-gold-400">20+</div>
+            <div class="text-xs text-neutral-500 mt-1">Code Examples</div>
+          </div>
+          <div>
+            <div class="text-2xl font-semibold text-gold-400">100%</div>
+            <div class="text-xs text-neutral-500 mt-1">Free Content</div>
+          </div>
+        </div>
+      </div>
+      <!-- Right: Visual Stack -->
+      <div class="fade-up relative flex justify-center" style="transition-delay:0.2s">
+        <div class="relative float-anim">
+          <div class="w-72 h-72 lg:w-80 lg:h-80 rounded-2xl overflow-hidden border border-white/10 shadow-2xl shadow-black/50">
+            <img src="https://picsum.photos/seed/fullstack-hero/640/640.jpg" alt="Full Stack Development" class="w-full h-full object-cover opacity-70" />
+            <div class="absolute inset-0 bg-gradient-to-t from-charcoal-950 via-charcoal-950/40 to-transparent"></div>
+            <div class="absolute bottom-6 left-6 right-6">
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-10 h-10 rounded-lg bg-gold-500/20 border border-gold-500/30 flex items-center justify-center">
+                  <iconify-icon icon="lucide:code-2" width="20" class="text-gold-400"></iconify-icon>
+                </div>
+                <div>
+                  <div class="text-sm font-medium">The Full Stack</div>
+                  <div class="text-xs text-neutral-500">Frontend → Backend → Database</div>
+                </div>
+              </div>
+              <div class="flex gap-2">
+                <span class="px-2 py-0.5 text-[10px] font-medium tracking-wide bg-white/5 border border-white/10 rounded text-neutral-400">HTML5</span>
+                <span class="px-2 py-0.5 text-[10px] font-medium tracking-wide bg-white/5 border border-white/10 rounded text-neutral-400">CSS3</span>
+                <span class="px-2 py-0.5 text-[10px] font-medium tracking-wide bg-white/5 border border-white/10 rounded text-neutral-400">Bootstrap</span>
+                <span class="px-2 py-0.5 text-[10px] font-medium tracking-wide bg-white/5 border border-white/10 rounded text-neutral-400">JS</span>
+              </div>
+            </div>
+          </div>
+          <!-- Floating badges -->
+          <div class="absolute -top-4 -right-4 px-3 py-2 bg-charcoal-900/90 backdrop-blur-xl border border-white/10 rounded-lg shadow-xl" style="animation: float 5s ease-in-out infinite 0.5s;">
+            <div class="flex items-center gap-2">
+              <iconify-icon icon="lucide:layout" width="16" class="text-gold-400"></iconify-icon>
+              <span class="text-xs font-medium">Frontend</span>
+            </div>
+          </div>
+          <div class="absolute -bottom-4 -left-4 px-3 py-2 bg-charcoal-900/90 backdrop-blur-xl border border-white/10 rounded-lg shadow-xl" style="animation: float 5s ease-in-out infinite 1s;">
+            <div class="flex items-center gap-2">
+              <iconify-icon icon="lucide:server" width="16" class="text-gold-400"></iconify-icon>
+              <span class="text-xs font-medium">Backend</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DIVIDER -->
+  <div class="h-px bg-gradient-to-r from-transparent via-gold-500/20 to-transparent"></div>
+
+  <!-- WHAT IS FULL STACK DEVELOPMENT -->
+  <section id="what" class="py-24 lg:py-32 px-6 relative">
+    <div class="absolute inset-0 bg-cinematic-fade pointer-events-none"></div>
+    <div class="container mx-auto max-w-7xl relative">
+      <div class="text-center mb-16 fade-up">
+        <span class="text-xs font-medium tracking-widest uppercase text-gold-500 mb-4 block">Chapter 01</span>
+        <h2 class="text-3xl lg:text-5xl font-semibold tracking-tight mb-6">What is Full Stack<br/><span class="bg-clip-text text-transparent bg-gold-gradient">Development?</span></h2>
+        <p class="text-neutral-400 font-light leading-relaxed max-w-2xl mx-auto">
+          Full stack development refers to the practice of working on both the frontend (client-side) and backend (server-side) of a web application.
+        </p>
+      </div>
+
+      <!-- Architecture Diagram -->
+      <div class="grid md:grid-cols-3 gap-6 mb-16">
+        <div class="fade-up p-8 rounded-xl border border-white/10 bg-charcoal-900/50 hover:bg-white/10 hover:-translate-y-1 transition-all duration-300 hover:shadow-[0_0_25px_-5px_rgba(242,201,76,0.4)] group">
+          <div class="w-12 h-12 rounded-lg bg-gold-500/10 border border-gold-500/20 flex items-center justify-center mb-6 group-hover:bg-gold-500/20 transition-colors">
+            <iconify-icon icon="lucide:monitor" width="24" class="text-gold-400 group-hover:text-gold-300 transition-colors"></iconify-icon>
+          </div>
+          <h3 class="text-xl font-medium mb-3">Frontend</h3>
+          <p class="text-neutral-400 font-light leading-relaxed text-sm mb-4">What users see and interact with. Built with HTML, CSS, and JavaScript to create responsive, beautiful interfaces.</p>
+          <div class="flex flex-wrap gap-2">
+            <span class="px-2 py-0.5 text-[10px] font-medium bg-white/5 border border-white/10 rounded text-neutral-500">HTML</span>
+            <span class="px-2 py-0.5 text-[10px] font-medium bg-white/5 border border-white/10 rounded text-neutral-500">CSS</span>
+            <span class="px-2 py-0.5 text-[10px] font-medium bg-white/5 border border-white/10 rounded text-neutral-500">JavaScript</span>
+            <span class="px-2 py-0.5 text-[10px] font-medium bg-white/5 border border-white/10 rounded text-neutral-500">Bootstrap</span>
+          </div>
+        </div>
+        <div class="fade-up p-8 rounded-xl border border-white/10 bg-charcoal-900/50 hover:bg-white/10 hover:-translate-y-1 transition-all duration-300 hover:shadow-[0_0_25px_-5px_rgba(242,201,76,0.4)] group" style="transition-delay:0.1s">
+          <div class="w-12 h-12 rounded-lg bg-gold-500/10 border border-gold-500/20 flex items-center justify-center mb-6 group-hover:bg-gold-500/20 transition-colors">
+            <iconify-icon icon="lucide:server" width="24" class="text-gold-400 group-hover:text-gold-300 transition-colors"></iconify-icon>
+          </div>
+          <h3 class="text-xl font-medium mb-3">Backend</h3>
+          <p class="text-neutral-400 font-light leading-relaxed text-sm mb-4">The server-side logic that processes requests, handles authentication, and manages business logic behind the scenes.</p>
+          <div class="flex flex-wrap gap-2">
+            <span class="px-2 py-0.5 text-[10px] font-medium bg-white/5 border border-white/10 rounded text-neutral-500">Node.js</span>
+            <span class="px-2 py-0.5 text-[10px] font-medium bg-white/5 border border-white/10 rounded text-neutral-500">Python</span>
+            <span class="px-2 py-0.5 text-[10px] font-medium bg-white/5 border border-white/10 rounded text-neutral-500">PHP</span>
+            <span class="px-2 py-0.5 text-[10px] font-medium bg-white/5 border border-white/10 rounded text-neutral-500">APIs</span>
+          </div>
+        </div>
+        <div class="fade-up p-8 rounded-xl border border-white/10 bg-charcoal-900/50 hover:bg-white/10 hover:-translate-y-1 transition-all duration-300 hover:shadow-[0_0_25px_-5px_rgba(242,201,76,0.4)] group" style="transition-delay:0.2s">
+          <div class="w-12 h-12 rounded-lg bg-gold-500/10 border border-gold-500/20 flex items-center justify-center mb-6 group-hover:bg-gold-500/20 transition-colors">
+            <iconify-icon icon="lucide:database" width="24" class="text-gold-400 group-hover:text-gold-300 transition-colors"></iconify-icon>
+          </div>
+          <h3 class="text-xl font-medium mb-3">Database</h3>
+          <p class="text-neutral-400 font-light leading-relaxed text-sm mb-4">Where data is stored, organized, and retrieved. The backbone of any dynamic web application's persistence layer.</p>
+          <div class="flex flex-wrap gap-2">
+            <span class="px-2 py-0.5 text-[10px] font-medium bg-white/5 border border-white/10 rounded text-neutral-500">MySQL</span>
+            <span class="px-2 py-0.5 text-[10px] font-medium bg-white/5 border border-white/10 rounded text-neutral-500">MongoDB</span>
+            <span class="px-2 py-0.5 text-[10px] font-medium bg-white/5 border border-white/10 rounded text-neutral-500">PostgreSQL</span>
+            <span class="px-2 py-0.5 text-[10px] font-medium bg-white/5 border border-white/10 rounded text-neutral-500">Firebase</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Why Full Stack -->
+      <div class="fade-up grid lg:grid-cols-12 gap-12 items-center p-8 lg:p-12 rounded-xl border border-white/10 bg-charcoal-900/30">
+        <div class="lg:col-span-7">
+          <h3 class="text-2xl font-semibold tracking-tight mb-4">Why Learn Full Stack Development?</h3>
+          <div class="space-y-4">
+            <div class="flex items-start gap-3">
+              <div class="w-6 h-6 rounded-full bg-gold-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <iconify-icon icon="lucide:check" width="14" class="text-gold-400"></iconify-icon>
+              </div>
+              <p class="text-neutral-400 font-light text-sm leading-relaxed"><span class="text-white font-medium">End-to-end ownership</span> — Build and deploy entire applications independently without depending on others.</p>
+            </div>
+            <div class="flex items-start gap-3">
+              <div class="w-6 h-6 rounded-full bg-gold-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <iconify-icon icon="lucide:check" width="14" class="text-gold-400"></iconify-icon>
+              </div>
+              <p class="text-neutral-400 font-light text-sm leading-relaxed"><span class="text-white font-medium">High demand & salary</span> — Full stack developers are among the most sought-after professionals in tech.</p>
+            </div>
+            <div class="flex items-start gap-3">
+              <div class="w-6 h-6 rounded-full bg-gold-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <iconify-icon icon="lucide:check" width="14" class="text-gold-400"></iconify-icon>
+              </div>
+              <p class="text-neutral-400 font-light text-sm leading-relaxed"><span class="text-white font-medium">Faster prototyping</span> — When you know the whole stack, you can build MVPs rapidly and iterate quickly.</p>
+            </div>
+            <div class="flex items-start gap-3">
+              <div class="w-6 h-6 rounded-full bg-gold-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <iconify-icon icon="lucide:check" width="14" class="text-gold-400"></iconify-icon>
+              </div>
+              <p class="text-neutral-400 font-light text-sm leading-relaxed"><span class="text-white font-medium">Better debugging</span> — Understanding both sides makes it easier to trace issues across the entire system.</p>
+            </div>
+          </div>
+        </div>
+        <div class="lg:col-span-5">
+          <div class="rounded-xl overflow-hidden border border-white/10">
+            <img src="https://picsum.photos/seed/why-fullstack/600/400.jpg" alt="Why Full Stack" class="w-full h-64 object-cover opacity-60 hover:opacity-80 transition-opacity duration-500" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="h-px bg-gradient-to-r from-transparent via-gold-500/20 to-transparent"></div>
+
+  <!-- HTML SECTION -->
+  <section id="html" class="py-24 lg:py-32 px-6 relative">
+    <div class="container mx-auto max-w-7xl">
+      <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
+        <!-- Left Content -->
+        <div class="fade-up">
+          <span class="text-xs font-medium tracking-widest uppercase text-gold-500 mb-4 block">Chapter 02</span>
+          <h2 class="text-3xl lg:text-5xl font-semibold tracking-tight mb-6">HTML<span class="bg-clip-text text-transparent bg-gold-gradient">.</span></h2>
+          <p class="text-neutral-400 font-light leading-relaxed mb-8">
+            <strong class="text-white font-medium">HyperText Markup Language</strong> is the standard language for creating web pages. It provides the structural skeleton of every website — defining headings, paragraphs, images, links, forms, and more.
+          </p>
+
+          <!-- Key Concepts -->
+          <div class="space-y-3 mb-8">
+            <div class="flex items-center gap-3 p-3 rounded-lg bg-white/5 border border-white/5">
+              <iconify-icon icon="lucide:file-code" width="18" class="text-gold-400"></iconify-icon>
+              <span class="text-sm text-neutral-300">Elements & Tags — the building blocks</span>
+            </div>
+            <div class="flex items-center gap-3 p-3 rounded-lg bg-white/5 border border-white/5">
+              <iconify-icon icon="lucide:git-branch" width="18" class="text-gold-400"></iconify-icon>
+              <span class="text-sm text-neutral-300">DOM Tree — hierarchical document structure</span>
+            </div>
+            <div class="flex items-center gap-3 p-3 rounded-lg bg-white/5 border border-white/5">
+              <iconify-icon icon="lucide:settings" width="18" class="text-gold-400"></iconify-icon>
+              <span class="text-sm text-neutral-300">Attributes — id, class, src, href, data-*</span>
+            </div>
+            <div class="flex items-center gap-3 p-3 rounded-lg bg-white/5 border border-white/5">
+              <iconify-icon icon="lucide:accessibility" width="18" class="text-gold-400"></iconify-icon>
+              <span class="text-sm text-neutral-300">Semantic HTML — header, nav, main, article, footer</span>
+            </div>
+            <div class="flex items-center gap-3 p-3 rounded-lg bg-white/5 border border-white/5">
+              <iconify-icon icon="lucide:form-input" width="18" class="text-gold-400"></iconify-icon>
+              <span class="text-sm text-neutral-300">Forms — input, select, textarea, button</span>
+            </div>
+          </div>
+
+          <div class="progress-bar mb-2 visible" style="--w: 95%">
+            <div class="fill"></div>
+          </div>
+          <div class="flex justify-between text-xs text-neutral-500 mb-6">
+            <span>Importance for Full Stack</span>
+            <span class="text-gold-400">95%</span>
+          </div>
+        </div>
+
+        <!-- Right: Code Example -->
+        <div class="fade-up" style="transition-delay:0.15s">
+          <div class="code-block shadow-2xl shadow-black/50">
+            <div class="code-header">
+              <div class="dot" style="background:#ff5f57"></div>
+              <div class="dot" style="background:#febc2e"></div>
+              <div class="dot" style="background:#28c840"></div>
+              <span class="text-xs text-neutral-500 ml-2">index.html</span>
+            </div>
+            <pre class="text-neutral-300 font-mono"><code><span class="code-comment">&lt;!-- HTML5 Document Structure --&gt;</span>
+<span class="code-tag">&lt;!DOCTYPE html&gt;</span>
+<span class="code-tag">&lt;html</span> <span class="code-attr">lang</span>=<span class="code-string">"en"</span><span class="code-tag">&gt;</span>
+<span class="code-tag">&lt;head&gt;</span>
+  <span class="code-tag">&lt;meta</span> <span class="code-attr">charset</span>=<span class="code-string">"UTF-8"</span> <span class="code-tag">/&gt;</span>
+  <span class="code-tag">&lt;meta</span> <span class="code-attr">name</span>=<span class="code-string">"viewport"</span>
+    <span class="code-attr">content</span>=<span class="code-string">"width=device-width, initial-scale=1.0"</span> <span class="code-tag">/&gt;</span>
+  <span class="code-tag">&lt;title&gt;</span>My Portfolio<span class="code-tag">&lt;/title&gt;</span>
+<span class="code-tag">&lt;/head&gt;</span>
+<span class="code-tag">&lt;body&gt;</span>
+  <span class="code-tag">&lt;header&gt;</span>
+    <span class="code-tag">&lt;nav&gt;</span>
+      <span class="code-tag">&lt;a</span> <span class="code-attr">href</span>=<span class="code-string">"#home"</span><span class="code-tag">&gt;</span>Home<span class="code-tag">&lt;/a&gt;</span>
+      <span class="code-tag">&lt;a</span> <span class="code-attr">href</span>=<span class="code-string">"#about"</span><span class="code-tag">&gt;</span>About<span class="code-tag">&lt;/a&gt;</span>
+      <span class="code-tag">&lt;a</span> <span class="code-attr">href</span>=<span class="code-string">"#contact"</span><span class="code-tag">&gt;</span>Contact<span class="code-tag">&lt;/a&gt;</span>
+    <span class="code-tag">&lt;/nav&gt;</span>
+  <span class="code-tag">&lt;/header&gt;</span>
+
+  <span class="code-tag">&lt;main&gt;</span>
+    <span class="code-tag">&lt;section</span> <span class="code-attr">id</span>=<span class="code-string">"home"</span><span class="code-tag">&gt;</span>
+      <span class="code-tag">&lt;h1&gt;</span>Hello, World!<span class="code-tag">&lt;/h1&gt;</span>
+      <span class="code-tag">&lt;p&gt;</span>Welcome to my site.<span class="code-tag">&lt;/p&gt;</span>
+    <span class="code-tag">&lt;/section&gt;</span>
+  <span class="code-tag">&lt;/main&gt;</span>
+
+  <span class="code-tag">&lt;footer&gt;</span>
+    <span class="code-tag">&lt;p&gt;</span>&amp;copy; 2025<span class="code-tag">&lt;/p&gt;</span>
+  <span class="code-tag">&lt;/footer&gt;</span>
+<span class="code-tag">&lt;/body&gt;</span>
+<span class="code-tag">&lt;/html&gt;</span></code></pre>
+          </div>
+
+          <!-- Mini tip -->
+          <div class="mt-4 p-4 rounded-lg border border-gold-500/20 bg-gold-500/5">
+            <div class="flex items-start gap-2">
+              <iconify-icon icon="lucide:lightbulb" width="16" class="text-gold-400 mt-0.5 flex-shrink-0"></iconify-icon>
+              <p class="text-xs text-neutral-400 leading-relaxed"><strong class="text-gold-300">Pro Tip:</strong> Always use semantic HTML tags like &lt;header&gt;, &lt;main&gt;, &lt;section&gt;, and &lt;footer&gt; instead of generic &lt;div&gt; elements. This improves accessibility and SEO.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="h-px bg-gradient-to-r from-transparent via-gold-500/20 to-transparent"></div>
+
+  <!-- CSS SECTION -->
+  <section id="css" class="py-24 lg:py-32 px-6 relative">
+    <div class="absolute top-0 right-0 w-80 h-80 bg-gold-500/5 rounded-full blur-[120px] pointer-events-none"></div>
+    <div class="container mx-auto max-w-7xl relative">
+      <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
+        <!-- Left: Code -->
+        <div class="fade-up order-2 lg:order-1">
+          <div class="code-block shadow-2xl shadow-black/50">
+            <div class="code-header">
+              <div class="dot" style="background:#ff5f57"></div>
+              <div class="dot" style="background:#febc2e"></div>
+              <div class="dot" style="background:#28c840"></div>
+              <span class="text-xs text-neutral-500 ml-2">styles.css</span>
+            </div>
+            <pre class="text-neutral-300 font-mono"><code><span class="code-comment">/* CSS — Styling the Web */</span>
+
+<span class="code-comment">/* Variables for consistency */</span>
+<span class="code-tag">:root</span> {
+  <span class="code-prop">--primary</span>: <span class="code-num">#E6B800</span>;
+  <span class="code-prop">--bg-dark</span>: <span class="code-num">#050505</span>;
+  <span class="code-prop">--text</span>: <span class="code-num">#ffffff</span>;
+  <span class="code-prop">--radius</span>: <span class="code-num">12px</span>;
+}
+
+<span class="code-comment">/* Flexbox layout */</span>
+<span class="code-tag">.container</span> {
+  <span class="code-prop">display</span>: flex;
+  <span class="code-prop">justify-content</span>: center;
+  <span class="code-prop">align-items</span>: center;
+  <span class="code-prop">gap</span>: <span class="code-num">2rem</span>;
+  <span class="code-prop">min-height</span>: <span class="code-num">100vh</span>;
+}
+
+<span class="code-comment">/* Card with hover effect */</span>
+<span class="code-tag">.card</span> {
+  <span class="code-prop">background</span>: <span class="code-func">rgba</span>(<span class="code-num">255,255,255,0.05</span>);
+  <span class="code-prop">border</span>: <span class="code-num">1px</span> solid <span class="code-func">rgba</span>(<span class="code-num">255,255,255,0.1</span>);
+  <span class="code-prop">border-radius</span>: <span class="code-func">var</span>(<span class="code-prop">--radius</span>);
+  <span class="code-prop">padding</span>: <span class="code-num">2rem</span>;
+  <span class="code-prop">transition</span>: all <span class="code-num">0.3s</span> ease;
+}
+
+<span class="code-tag">.card:hover</span> {
+  <span class="code-prop">transform</span>: <span class="code-func">translateY</span>(<span class="code-num">-4px</span>);
+  <span class="code-prop">box-shadow</span>: <span class="code-num">0 0 30px</span>
+    <span class="code-func">rgba</span>(<span class="code-num">230,184,0,0.3</span>);
+}
+
+<span class="code-comment">/* CSS Grid responsive */</span>
+<span class="code-tag">.grid-layout</span> {
+  <span class="code-prop">display</span>: grid;
+  <span class="code-prop">grid-template-columns</span>:
+    <span class="code-func">repeat</span>(<span class="code-func">auto-fit</span>,
+    <span class="code-func">minmax</span>(<span class="code-num">280px, 1fr</span>));
+  <span class="code-prop">gap</span>: <span class="code-num">1.5rem</span>;
+}
+
+<span class="code-comment">/* Animation */</span>
+<span class="code-keyword">@keyframes</span> fadeUp {
+  <span class="code-tag">from</span> { opacity:<span class="code-num">0</span>; transform:<span class="code-func">translateY</span>(<span class="code-num">20px</span>); }
+  <span class="code-tag">to</span>   { opacity:<span class="code-num">1</span>; transform:<span class="code-func">translateY</span>(<span class="code-num">0</span>); }
+}</code></pre>
+          </div>
+        </div>
+
+        <!-- Right: Content -->
+        <div class="fade-up order-1 lg:order-2" style="transition-delay:0.15s">
+          <span class="text-xs font-medium tracking-widest uppercase text-gold-500 mb-4 block">Chapter 03</span>
+          <h2 class="text-3xl lg:text-5xl font-semibold tracking-tight mb-6">CSS<span class="bg-clip-text text-transparent bg-gold-gradient">.</span></h2>
+          <p class="text-neutral-400 font-light leading-relaxed mb-8">
+            <strong class="text-white font-medium">Cascading Style Sheets</strong> controls the visual presentation of HTML elements. It handles colors, typography, layouts, animations, and responsive design.
+          </p>
+
+          <!-- CSS Features Tabs -->
+          <div class="flex flex-wrap gap-2 mb-6">
+            <button class="tab-btn active px-3 py-1.5 text-xs font-medium border border-white/10 rounded-lg transition-all duration-300" data-tab="layout">Layout</button>
+            <button class="tab-btn px-3 py-1.5 text-xs font-medium border border-white/10 rounded-lg text-neutral-400 transition-all duration-300" data-tab="styling">Styling</button>
+            <button class="tab-btn px-3 py-1.5 text-xs font-medium border border-white/10 rounded-lg text-neutral-400 transition-all duration-300" data-tab="animation">Animation</button>
+            <button class="tab-btn px-3 py-1.5 text-xs font-medium border border-white/10 rounded-lg text-neutral-400 transition-all duration-300" data-tab="responsive">Responsive</button>
+          </div>
+
+          <div id="tab-layout" class="tab-content active p-5 rounded-xl bg-charcoal-900/50 border border-white/5">
+            <h4 class="text-sm font-medium mb-2 text-gold-300">Flexbox & Grid</h4>
+            <p class="text-xs text-neutral-400 leading-relaxed">Modern CSS provides two powerful layout systems. <strong class="text-neutral-300">Flexbox</strong> excels at one-dimensional layouts (rows or columns), while <strong class="text-neutral-300">CSS Grid</strong> handles complex two-dimensional layouts with ease.</p>
+          </div>
+          <div id="tab-styling" class="tab-content p-5 rounded-xl bg-charcoal-900/50 border border-white/5">
+            <h4 class="text-sm font-medium mb-2 text-gold-300">Visual Design</h4>
+            <p class="text-xs text-neutral-400 leading-relaxed">CSS variables (custom properties) enable theme consistency. Gradients, shadows, borders, backdrop-filter, and blend modes let you create rich visual designs entirely in CSS.</p>
+          </div>
+          <div id="tab-animation" class="tab-content p-5 rounded-xl bg-charcoal-900/50 border border-white/5">
+            <h4 class="text-sm font-medium mb-2 text-gold-300">Transitions & Keyframes</h4>
+            <p class="text-xs text-neutral-400 leading-relaxed">CSS transitions handle state changes smoothly (hover, focus). @keyframes enable complex multi-step animations. Combine with transform and opacity for performant 60fps motion.</p>
+          </div>
+          <div id="tab-responsive" class="tab-content p-5 rounded-xl bg-charcoal-900/50 border border-white/5">
+            <h4 class="text-sm font-medium mb-2 text-gold-300">Media Queries & Units</h4>
+            <p class="text-xs text-neutral-400 leading-relaxed">Media queries adapt styles per screen size. Use relative units (rem, em, vw, vh, %) for fluid designs. Mobile-first approach starts small, then scales up.</p>
+          </div>
+
+          <div class="progress-bar mb-2 mt-8 visible" style="--w: 90%">
+            <div class="fill"></div>
+          </div>
+          <div class="flex justify-between text-xs text-neutral-500">
+            <span>Importance for Full Stack</span>
+            <span class="text-gold-400">90%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="h-px bg-gradient-to-r from-transparent via-gold-500/20 to-transparent"></div>
+
+  <!-- BOOTSTRAP SECTION -->
+  <section id="bootstrap" class="py-24 lg:py-32 px-6 relative">
+    <div class="container mx-auto max-w-7xl">
+      <div class="text-center mb-16 fade-up">
+        <span class="text-xs font-medium tracking-widest uppercase text-gold-500 mb-4 block">Chapter 04</span>
+        <h2 class="text-3xl lg:text-5xl font-semibold tracking-tight mb-6">Bootstrap Framework<span class="bg-clip-text text-transparent bg-gold-gradient">.</span></h2>
+        <p class="text-neutral-400 font-light leading-relaxed max-w-2xl mx-auto">
+          The world's most popular CSS framework — build responsive, mobile-first websites rapidly with pre-built components and a powerful grid system.
+        </p>
+      </div>
+
+      <!-- Bootstrap Components Grid -->
+      <div class="grid md:grid-cols-2 gap-6 mb-12">
+        <!-- Grid System -->
+        <div class="fade-up p-8 rounded-xl border border-white/10 bg-charcoal-900/50 hover:bg-white/10 hover:-translate-y-1 transition-all duration-300 group">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-lg bg-purple-500/10 border border-purple-500/20 flex items-center justify-center">
+              <iconify-icon icon="lucide:grid-3x3" width="20" class="text-purple-400"></iconify-icon>
+            </div>
+            <h3 class="text-lg font-medium">12-Column Grid</h3>
+          </div>
+          <p class="text-sm text-neutral-400 font-light leading-relaxed mb-4">Divide any row into 12 equal columns. Combine column classes for flexible layouts that automatically stack on mobile.</p>
+          <div class="code-block !border-white/5">
+            <pre class="text-neutral-400 font-mono !p-3 !text-xs"><code><span class="code-tag">&lt;div</span> <span class="code-attr">class</span>=<span class="code-string">"container"</span><span class="code-tag">&gt;</span>
+  <span class="code-tag">&lt;div</span> <span class="code-attr">class</span>=<span class="code-string">"row"</span><span class="code-tag">&gt;</span>
+    <span class="code-tag">&lt;div</span> <span class="code-attr">class</span>=<span class="code-string">"col-md-8"</span><span class="code-tag">&gt;</span>Main<span class="code-tag">&lt;/div&gt;</span>
+    <span class="code-tag">&lt;div</span> <span class="code-attr">class</span>=<span class="code-string">"col-md-4"</span><span class="code-tag">&gt;</span>Side<span class="code-tag">&lt;/div&gt;</span>
+  <span class="code-tag">&lt;/div&gt;</span>
+<span class="code-tag">&lt;/div&gt;</span></code></pre>
+          </div>
+        </div>
+
+        <!-- Components -->
+        <div class="fade-up p-8 rounded-xl border border-white/10 bg-charcoal-900/50 hover:bg-white/10 hover:-translate-y-1 transition-all duration-300 group" style="transition-delay:0.1s">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
+              <iconify-icon icon="lucide:puzzle" width="20" class="text-blue-400"></iconify-icon>
+            </div>
+            <h3 class="text-lg font-medium">Pre-built Components</h3>
+          </div>
+          <p class="text-sm text-neutral-400 font-light leading-relaxed mb-4">Ready-to-use UI components: navbars, cards, modals, carousels, dropdowns, alerts, and 100+ more — all fully customizable.</p>
+          <div class="flex flex-wrap gap-2">
+            <span class="px-2.5 py-1 text-[10px] font-medium bg-blue-500/10 border border-blue-500/20 rounded text-blue-300">Navbar</span>
+            <span class="px-2.5 py-1 text-[10px] font-medium bg-blue-500/10 border border-blue-500/20 rounded text-blue-300">Cards</span>
+            <span class="px-2.5 py-1 text-[10px] font-medium bg-blue-500/10 border border-blue-500/20 rounded text-blue-300">Modal</span>
+            <span class="px-2.5 py-1 text-[10px] font-medium bg-blue-500/10 border border-blue-500/20 rounded text-blue-300">Carousel</span>
+            <span class="px-2.5 py-1 text-[10px] font-medium bg-blue-500/10 border border-blue-500/20 rounded text-blue-300">Accordion</span>
+            <span class="px-2.5 py-1 text-[10px] font-medium bg-blue-500/10 border border-blue-500/20 rounded text-blue-300">Tabs</span>
+            <span class="px-2.5 py-1 text-[10px] font-medium bg-blue-500/10 border border-blue-500/20 rounded text-blue-300">Forms</span>
+            <span class="px-2.5 py-1 text-[10px] font-medium bg-blue-500/10 border border-blue-500/20 rounded text-blue-300">Alerts</span>
+            <span class="px-2.5 py-1 text-[10px] font-medium bg-blue-500/10 border border-blue-500/20 rounded text-blue-300">Badges</span>
+            <span class="px-2.5 py-1 text-[10px] font-medium bg-blue-500/10 border border-blue-500/20 rounded text-blue-300">Tooltips</span>
+          </div>
+        </div>
+
+        <!-- Utility Classes -->
+        <div class="fade-up p-8 rounded-xl border border-white/10 bg-charcoal-900/50 hover:bg-white/10 hover:-translate-y-1 transition-all duration-300 group" style="transition-delay:0.15s">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-lg bg-green-500/10 border border-green-500/20 flex items-center justify-center">
+              <iconify-icon icon="lucide:wrench" width="20" class="text-green-400"></iconify-icon>
+            </div>
+            <h3 class="text-lg font-medium">Utility Classes</h3>
+          </div>
+          <p class="text-sm text-neutral-400 font-light leading-relaxed mb-4">Speed up development with utility classes for spacing, colors, display, text alignment, flexbox, and more — no custom CSS needed.</p>
+          <div class="code-block !border-white/5">
+            <pre class="text-neutral-400 font-mono !p-3 !text-xs"><code><span class="code-comment">&lt;!-- Spacing --&gt;</span>
+<span class="code-tag">&lt;div</span> <span class="code-attr">class</span>=<span class="code-string">"mt-4 p-3 mb-2"</span><span class="code-tag">&gt;</span>...<span class="code-tag">&lt;/div&gt;</span>
+
+<span class="code-comment">&lt;!-- Flexbox --&gt;</span>
+<span class="code-tag">&lt;div</span> <span class="code-attr">class</span>=<span class="code-string">"d-flex justify-content-between
+  align-items-center"</span><span class="code-tag">&gt;</span>...<span class="code-tag">&lt;/div&gt;</span>
+
+<span class="code-comment">&lt;!-- Text --&gt;</span>
+<span class="code-tag">&lt;p</span> <span class="code-attr">class</span>=<span class="code-string">"text-center fw-bold
+  text-muted"</span><span class="code-tag">&gt;</span>...<span class="code-tag">&lt;/p&gt;</span></code></pre>
+          </div>
+        </div>
+
+        <!-- Responsive Breakpoints -->
+        <div class="fade-up p-8 rounded-xl border border-white/10 bg-charcoal-900/50 hover:bg-white/10 hover:-translate-y-1 transition-all duration-300 group" style="transition-delay:0.2s">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-lg bg-orange-500/10 border border-orange-500/20 flex items-center justify-center">
+              <iconify-icon icon="lucide:smartphone" width="20" class="text-orange-400"></iconify-icon>
+            </div>
+            <h3 class="text-lg font-medium">Responsive Breakpoints</h3>
+          </div>
+          <p class="text-sm text-neutral-400 font-light leading-relaxed mb-4">Six default breakpoints that adapt your layout from extra small phones to ultra-wide screens seamlessly.</p>
+          <div class="space-y-2">
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-neutral-500 font-mono">xs</span>
+              <span class="text-neutral-400">&lt;576px</span>
+              <div class="flex-1 mx-3 h-1 bg-white/5 rounded"><div class="h-full bg-orange-400/40 rounded" style="width:15%"></div></div>
+            </div>
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-neutral-500 font-mono">sm</span>
+              <span class="text-neutral-400">≥576px</span>
+              <div class="flex-1 mx-3 h-1 bg-white/5 rounded"><div class="h-full bg-orange-400/50 rounded" style="width:30%"></div></div>
+            </div>
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-neutral-500 font-mono">md</span>
+              <span class="text-neutral-400">≥768px</span>
+              <div class="flex-1 mx-3 h-1 bg-white/5 rounded"><div class="h-full bg-orange-400/60 rounded" style="width:50%"></div></div>
+            </div>
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-neutral-500 font-mono">lg</span>
+              <span class="text-neutral-400">≥992px</span>
+              <div class="flex-1 mx-3 h-1 bg-white/5 rounded"><div class="h-full bg-orange-400/70 rounded" style="width:70%"></div></div>
+            </div>
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-neutral-500 font-mono">xl</span>
+              <span class="text-neutral-400">≥1200px</span>
+              <div class="flex-1 mx-3 h-1 bg-white/5 rounded"><div class="h-full bg-orange-400/80 rounded" style="width:85%"></div></div>
+            </div>
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-neutral-500 font-mono">xxl</span>
+              <span class="text-neutral-400">≥1400px</span>
+              <div class="flex-1 mx-3 h-1 bg-white/5 rounded"><div class="h-full bg-orange-400 rounded" style="width:100%"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- How to include -->
+      <div class="fade-up p-6 rounded-xl border border-white/10 bg-charcoal-900/30">
+        <div class="flex items-center gap-3 mb-3">
+          <iconify-icon icon="lucide:link" width="18" class="text-gold-400"></iconify-icon>
+          <h4 class="text-sm font-medium">How to Include Bootstrap</h4>
+        </div>
+        <div class="code-block !border-white/5">
+          <pre class="text-neutral-400 font-mono !p-3 !text-xs"><code><span class="code-comment">&lt;!-- CSS --&gt;</span>
+<span class="code-tag">&lt;link</span> <span class="code-attr">href</span>=<span class="code-string">"https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"</span> <span class="code-attr">rel</span>=<span class="code-string">"stylesheet"</span><span class="code-tag">/&gt;</span>
+
+<span class="code-comment">&lt;!-- JS Bundle (includes Popper for tooltips) --&gt;</span>
+<span class="code-tag">&lt;script</span> <span class="code-attr">src</span>=<span class="code-string">"https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"</span><span class="code-tag">&gt;&lt;/script&gt;</span></code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="h-px bg-gradient-to-r from-transparent via-gold-500/20 to-transparent"></div>
+
+  <!-- JAVASCRIPT SECTION -->
+  <section id="js" class="py-24 lg:py-32 px-6 relative">
+    <div class="absolute bottom-0 left-1/4 w-96 h-96 bg-gold-500/5 rounded-full blur-[120px] pointer-events-none"></div>
+    <div class="container mx-auto max-w-7xl relative">
+      <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
+        <!-- Left: Content -->
+        <div class="fade-up">
+          <span class="text-xs font-medium tracking-widest uppercase text-gold-500 mb-4 block">Chapter 05</span>
+          <h2 class="text-3xl lg:text-5xl font-semibold tracking-tight mb-6">JavaScript<span class="bg-clip-text text-transparent bg-gold-gradient">.</span></h2>
+          <p class="text-neutral-400 font-light leading-relaxed mb-8">
+            The <strong class="text-white font-medium">programming language of the web</strong>. JavaScript adds interactivity, dynamic content, API communication, and complex logic to your websites. It's the only language that runs natively in browsers.
+          </p>
+
+          <!-- JS Concepts -->
+          <div class="space-y-4 mb-8">
+            <div class="p-4 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/5 transition-colors duration-300">
+              <div class="flex items-center gap-2 mb-2">
+                <iconify-icon icon="lucide:variable" width="16" class="text-gold-400"></iconify-icon>
+                <h4 class="text-sm font-medium">Variables & Data Types</h4>
+              </div>
+              <p class="text-xs text-neutral-500 leading-relaxed">let, const, var — strings, numbers, booleans, arrays, objects, null, undefined</p>
+            </div>
+            <div class="p-4 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/5 transition-colors duration-300">
+              <div class="flex items-center gap-2 mb-2">
+                <iconify-icon icon="lucide:git-branch" width="16" class="text-gold-400"></iconify-icon>
+                <h4 class="text-sm font-medium">Control Flow</h4>
+              </div>
+              <p class="text-xs text-neutral-500 leading-relaxed">if/else, switch, for, while, for...of, for...in loops</p>
+            </div>
+            <div class="p-4 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/5 transition-colors duration-300">
+              <div class="flex items-center gap-2 mb-2">
+                <iconify-icon icon="lucide:box" width="16" class="text-gold-400"></iconify-icon>
+                <h4 class="text-sm font-medium">Functions</h4>
+              </div>
+              <p class="text-xs text-neutral-500 leading-relaxed">function declarations, expressions, arrow functions, callbacks, closures</p>
+            </div>
+            <div class="p-4 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/5 transition-colors duration-300">
+              <div class="flex items-center gap-2 mb-2">
+                <iconify-icon icon="lucide:array" width="16" class="text-gold-400"></iconify-icon>
+                <h4 class="text-sm font-medium">Array Methods</h4>
+              </div>
+              <p class="text-xs text-neutral-500 leading-relaxed">map, filter, reduce, find, forEach, some, every, sort, splice</p>
+            </div>
+            <div class="p-4 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/5 transition-colors duration-300">
+              <div class="flex items-center gap-2 mb-2">
+                <iconify-icon icon="lucide:globe" width="16" class="text-gold-400"></iconify-icon>
+                <h4 class="text-sm font-medium">DOM & Events</h4>
+              </div>
+              <p class="text-xs text-neutral-500 leading-relaxed">querySelector, addEventListener, createElement, classList, innerHTML</p>
+            </div>
+            <div class="p-4 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/5 transition-colors duration-300">
+              <div class="flex items-center gap-2 mb-2">
+                <iconify-icon icon="lucide:send" width="16" class="text-gold-400"></iconify-icon>
+                <h4 class="text-sm font-medium">Async JavaScript</h4>
+              </div>
+              <p class="text-xs text-neutral-500 leading-relaxed">Promises, async/await, fetch API, error handling with try/catch</p>
+            </div>
+          </div>
+
+          <div class="progress-bar mb-2 visible" style="--w: 98%">
+            <div class="fill"></div>
+          </div>
+          <div class="flex justify-between text-xs text-neutral-500">
+            <span>Importance for Full Stack</span>
+            <span class="text-gold-400">98%</span>
+          </div>
+        </div>
+
+        <!-- Right: Interactive JS Demo -->
+        <div class="fade-up space-y-6" style="transition-delay:0.15s">
+          <!-- Live Demo Box -->
+          <div class="p-6 rounded-xl border border-white/10 bg-charcoal-900/50">
+            <div class="flex items-center justify-between mb-4">
+              <h4 class="text-sm font-medium flex items-center gap-2">
+                <iconify-icon icon="lucide:play-circle" width="16" class="text-gold-400"></iconify-icon>
+                Live JavaScript Demo
+              </h4>
+              <span class="text-[10px] px-2 py-0.5 bg-green-500/10 border border-green-500/20 text-green-400 rounded-full font-medium">Interactive</span>
+            </div>
+
+            <!-- Counter Demo -->
+            <div class="p-4 rounded-lg bg-charcoal-950 border border-white/5 mb-4">
+              <p class="text-xs text-neutral-500 mb-3">Counter Example</p>
+              <div class="flex items-center justify-center gap-4 mb-3">
+                <button id="decrementBtn" class="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors text-lg font-medium">−</button>
+                <span id="counterValue" class="text-3xl font-semibold text-gold-400 min-w-[3ch] text-center">0</span>
+                <button id="incrementBtn" class="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors text-lg font-medium">+</button>
+              </div>
+              <button id="resetBtn" class="w-full py-2 text-xs text-neutral-500 hover:text-white border border-white/5 rounded-lg hover:bg-white/5 transition-all">Reset</button>
+            </div>
+
+            <!-- Color Generator Demo -->
+            <div class="p-4 rounded-lg bg-charcoal-950 border border-white/5 mb-4">
+              <p class="text-xs text-neutral-500 mb-3">Random Color Generator</p>
+              <div id="colorPreview" class="w-full h-16 rounded-lg mb-3 border border-white/10 transition-colors duration-300" style="background: #E6B800;"></div>
+              <div class="flex items-center gap-2">
+                <span id="colorCode" class="flex-1 text-sm font-mono text-neutral-300 bg-white/5 px-3 py-2 rounded-lg border border-white/5">#E6B800</span>
+                <button id="copyColorBtn" class="px-3 py-2 text-xs bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition-colors">Copy</button>
+              </div>
+              <button id="generateColorBtn" class="w-full mt-3 py-2.5 bg-gold-gradient text-charcoal-900 font-semibold text-xs rounded-lg hover:-translate-y-0.5 transition-all duration-300">Generate Color</button>
+            </div>
+
+            <!-- Toast notification -->
+            <div id="toast" class="fixed bottom-6 right-6 px-4 py-3 bg-charcoal-900 border border-gold-500/30 rounded-xl shadow-2xl shadow-black/50 text-sm flex items-center gap-2 transition-all duration-500 translate-y-20 opacity-0 pointer-events-none z-40">
+              <iconify-icon icon="lucide:check-circle" width="16" class="text-gold-400"></iconify-icon>
+              <span id="toastMsg">Copied!</span>
+            </div>
+          </div>
+
+          <!-- Code for demos -->
+          <div class="code-block shadow-2xl shadow-black/50">
+            <div class="code-header">
+              <div class="dot" style="background:#ff5f57"></div>
+              <div class="dot" style="background:#febc2e"></div>
+              <div class="dot" style="background:#28c840"></div>
+              <span class="text-xs text-neutral-500 ml-2">script.js</span>
+            </div>
+            <pre class="text-neutral-300 font-mono"><code><span class="code-comment">// Counter with DOM manipulation</span>
+<span class="code-keyword">let</span> count = <span class="code-num">0</span>;
+<span class="code-keyword">const</span> display = <span class="code-func">document</span>
+  .<span class="code-func">getElementById</span>(<span class="code-string">'counterValue'</span>);
+
+<span class="code-func">document</span>.<span class="code-func">getElementById</span>(<span class="code-string">'incrementBtn'</span>)
+  .<span class="code-func">addEventListener</span>(<span class="code-string">'click'</span>, () => {
+    display.textContent = ++count;
+  });
+
+<span class="code-comment">// Random color generator</span>
+<span class="code-keyword">function</span> <span class="code-func">randomColor</span>() {
+  <span class="code-keyword">const</span> hex = <span class="code-string">'#'</span> + Math.<span class="code-func">floor</span>(
+    Math.<span class="code-func">random</span>() * <span class="code-num">16777215</span>
+  ).<span class="code-func">toString</span>(<span class="code-num">16</span>).<span class="code-func">padStart</span>(<span class="code-num">6</span>,<span class="code-string">'0'</span>);
+  <span class="code-keyword">return</span> hex;
+}
+
+<span class="code-comment">// Fetch API example</span>
+<span class="code-keyword">async function</span> <span class="code-func">getData</span>() {
+  <span class="code-keyword">try</span> {
+    <span class="code-keyword">const</span> res = <span class="code-keyword">await</span> <span class="code-func">fetch</span>(<span class="code-string">'/api/data'</span>);
+    <span class="code-keyword">const</span> data = <span class="code-keyword">await</span> res.<span class="code-func">json</span>();
+    console.<span class="code-func">log</span>(data);
+  } <span class="code-keyword">catch</span> (err) {
+    console.<span class="code-func">error</span>(err);
+  }
+}</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="h-px bg-gradient-to-r from-transparent via-gold-500/20 to-transparent"></div>
+
+  <!-- ROADMAP SECTION -->
+  <section id="roadmap" class="py-24 lg:py-32 px-6 relative">
+    <div class="absolute inset-0 bg-cinematic-fade pointer-events-none"></div>
+    <div class="container mx-auto max-w-4xl relative">
+      <div class="text-center mb-16 fade-up">
+        <span class="text-xs font-medium tracking-widest uppercase text-gold-500 mb-4 block">Learning Path</span>
+        <h2 class="text-3xl lg:text-5xl font-semibold tracking-tight mb-6">Full Stack <span class="bg-clip-text text-transparent bg-gold-gradient">Roadmap</span></h2>
+        <p class="text-neutral-400 font-light leading-relaxed max-w-2xl mx-auto">
+          Follow this step-by-step path from beginner to job-ready full stack developer.
+        </p>
+      </div>
+
+      <!-- Timeline -->
+      <div class="relative">
+        <!-- Vertical line -->
+        <div class="absolute left-6 lg:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-gold-500/50 via-gold-500/20 to-transparent"></div>
+
+        <!-- Step 1 -->
+        <div class="fade-up relative flex flex-col lg:flex-row items-start lg:items-center gap-6 mb-12 pl-16 lg:pl-0">
+          <div class="absolute left-4 lg:left-1/2 lg:-translate-x-1/2 w-5 h-5 rounded-full bg-gold-500 border-4 border-charcoal-950 z-10"></div>
+          <div class="lg:w-1/2 lg:pr-12 lg:text-right">
+            <span class="text-xs text-gold-400 font-medium">Step 01</span>
+            <h3 class="text-xl font-medium mt-1 mb-2">Learn HTML</h3>
+            <p class="text-sm text-neutral-400 font-light leading-relaxed">Master semantic HTML5 — document structure, forms, tables, media elements. Build 3-4 static pages.</p>
+            <div class="mt-3 text-xs text-neutral-500">⏱ ~2-3 weeks</div>
+          </div>
+          <div class="lg:w-1/2 lg:pl-12 hidden lg:block"></div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="fade-up relative flex flex-col lg:flex-row items-start lg:items-center gap-6 mb-12 pl-16 lg:pl-0">
+          <div class="absolute left-4 lg:left-1/2 lg:-translate-x-1/2 w-5 h-5 rounded-full bg-gold-500/70 border-4 border-charcoal-950 z-10"></div>
+          <div class="lg:w-1/2 lg:pr-12 hidden lg:block"></div>
+          <div class="lg:w-1/2 lg:pl-12">
+            <span class="text-xs text-gold-400 font-medium">Step 02</span>
+            <h3 class="text-xl font-medium mt-1 mb-2">Learn CSS</h3>
+            <p class="text-sm text-neutral-400 font-light leading-relaxed">Box model, Flexbox, Grid, transitions, animations, responsive design, CSS variables. Style your HTML pages.</p>
+            <div class="mt-3 text-xs text-neutral-500">⏱ ~3-4 weeks</div>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="fade-up relative flex flex-col lg:flex-row items-start lg:items-center gap-6 mb-12 pl-16 lg:pl-0">
+          <div class="absolute left-4 lg:left-1/2 lg:-translate-x-1/2 w-5 h-5 rounded-full bg-gold-500/50 border-4 border-charcoal-950 z-10"></div>
+          <div class="lg:w-1/2 lg:pr-12 lg:text-right">
+            <span class="text-xs text-gold-400 font-medium">Step 03</span>
+            <h3 class="text-xl font-medium mt-1 mb-2">Learn Bootstrap</h3>
+            <p class="text-sm text-neutral-400 font-light leading-relaxed">Grid system, components, utilities. Rebuild one of your CSS projects using Bootstrap to understand the speed advantage.</p>
+            <div class="mt-3 text-xs text-neutral-500">⏱ ~1-2 weeks</div>
+          </div>
+          <div class="lg:w-1/2 lg:pl-12 hidden lg:block"></div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="fade-up relative flex flex-col lg:flex-row items-start lg:items-center gap-6 mb-12 pl-16 lg:pl-0">
+          <div class="absolute left-4 lg:left-1/2 lg:-translate-x-1/2 w-5 h-5 rounded-full bg-gold-500/40 border-4 border-charcoal-950 z-10"></div>
+          <div class="lg:w-1/2 lg:pr-12 hidden lg:block"></div>
+          <div class="lg:w-1/2 lg:pl-12">
+            <span class="text-xs text-gold-400 font-medium">Step 04</span>
+            <h3 class="text-xl font-medium mt-1 mb-2">Learn JavaScript</h3>
+            <p class="text-sm text-neutral-400 font-light leading-relaxed">Core JS, DOM manipulation, events, ES6+, async/await, fetch API. Build interactive projects like a todo app, weather app, or quiz.</p>
+            <div class="mt-3 text-xs text-neutral-500">⏱ ~6-8 weeks</div>
+          </div>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="fade-up relative flex flex-col lg:flex-row items-start lg:items-center gap-6 mb-12 pl-16 lg:pl-0">
+          <div class="absolute left-4 lg:left-1/2 lg:-translate-x-1/2 w-5 h-5 rounded-full bg-gold-500/30 border-4 border-charcoal-950 z-10"></div>
+          <div class="lg:w-1/2 lg:pr-12 lg:text-right">
+            <span class="text-xs text-gold-400 font-medium">Step 05</span>
+            <h3 class="text-xl font-medium mt-1 mb-2">Learn a JS Framework</h3>
+            <p class="text-sm text-neutral-400 font-light leading-relaxed">React, Vue, or Angular — choose one and go deep. Learn component architecture, state management, routing.</p>
+            <div class="mt-3 text-xs text-neutral-500">⏱ ~4-6 weeks</div>
+          </div>
+          <div class="lg:w-1/2 lg:pl-12 hidden lg:block"></div>
+        </div>
+
+        <!-- Step 6 -->
+        <div class="fade-up relative flex flex-col lg:flex-row items-start lg:items-center gap-6 pl-16 lg:pl-0">
+          <div class="absolute left-4 lg:left-1/2 lg:-translate-x-1/2 w-5 h-5 rounded-full bg-gold-500/20 border-4 border-charcoal-950 z-10"></div>
+          <div class="lg:w-1/2 lg:pr-12 hidden lg:block"></div>
+          <div class="lg:w-1/2 lg:pl-12">
+            <span class="text-xs text-gold-400 font-medium">Step 06</span>
+            <h3 class="text-xl font-medium mt-1 mb-2">Backend & Database</h3>
+            <p class="text-sm text-neutral-400 font-light leading-relaxed">Node.js + Express, REST APIs, MongoDB or PostgreSQL, authentication (JWT), deployment (Vercel, AWS, Railway).</p>
+            <div class="mt-3 text-xs text-neutral-500">⏱ ~6-8 weeks</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="fade-up mt-20 text-center p-12 rounded-2xl border border-gold-500/20 bg-gold-500/5 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-64 h-64 bg-gold-500/10 rounded-full blur-[100px] pointer-events-none"></div>
+        <div class="relative">
+          <iconify-icon icon="lucide:rocket" width="40" class="text-gold-400 mb-4"></iconify-icon>
+          <h3 class="text-2xl font-semibold tracking-tight mb-3">Ready to Start?</h3>
+          <p class="text-neutral-400 font-light text-sm max-w-md mx-auto mb-6">The best time to start learning full stack development was yesterday. The second best time is now. Pick HTML and begin.</p>
+          <a href="#html" class="inline-flex items-center gap-2 px-8 py-4 bg-gold-gradient text-charcoal-900 font-semibold rounded-xl hover:-translate-y-1 transition-all duration-300 shadow-[0_0_40px_-10px_rgba(242,201,76,0.5)] hover:shadow-[0_0_60px_-10px_rgba(242,201,76,0.7)]">
+            Begin with HTML
+            <iconify-icon icon="lucide:arrow-up" width="18"></iconify-icon>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="py-12 px-6 border-t border-white/5">
+    <div class="container mx-auto max-w-7xl flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <div class="w-6 h-6 bg-gold-gradient rounded-md flex items-center justify-center">
+          <iconify-icon icon="lucide:layers" width="14" class="text-charcoal-900"></iconify-icon>
+        </div>
+        <span class="text-sm font-medium">FullStack<span class="text-gold-400">.guide</span></span>
+      </div>
+      <p class="text-xs text-neutral-600">Built with HTML, CSS, and JavaScript — a living example of what you'll learn.</p>
+      <div class="flex items-center gap-4">
+        <a href="#what" class="text-xs text-neutral-500 hover:text-gold-300 transition-colors">Top</a>
+        <a href="#html" class="text-xs text-neutral-500 hover:text-gold-300 transition-colors">HTML</a>
+        <a href="#js" class="text-xs text-neutral-500 hover:text-gold-300 transition-colors">JS</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- SCRIPTS -->
+  <script>
+    // Mobile Menu Toggle
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    let menuOpen = false;
+    mobileMenuBtn.addEventListener('click', () => {
+      menuOpen = !menuOpen;
+      mobileMenu.classList.toggle('hidden', !menuOpen);
+      mobileMenuBtn.innerHTML = menuOpen
+        ? '<iconify-icon icon="lucide:x" width="24"></iconify-icon>'
+        : '<iconify-icon icon="lucide:menu" width="24"></iconify-icon>';
+    });
+    // Close mobile menu on link click
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        menuOpen = false;
+        mobileMenu.classList.add('hidden');
+        mobileMenuBtn.innerHTML = '<iconify-icon icon="lucide:menu" width="24"></iconify-icon>';
+      });
+    });
+
+    // Scroll-triggered fade-up animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    // Progress bar animation
+    const progressObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.5 });
+    document.querySelectorAll('.progress-bar').forEach(el => progressObserver.observe(el));
+
+    // CSS Tabs
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+      });
+    });
+
+    // JavaScript Demos
+    // Counter
+    let count = 0;
+    const counterDisplay = document.getElementById('counterValue');
+    document.getElementById('incrementBtn').addEventListener('click', () => {
+      counterDisplay.textContent = ++count;
+      counterDisplay.style.transform = 'scale(1.2)';
+      setTimeout(() => counterDisplay.style.transform = 'scale(1)', 150);
+    });
+    document.getElementById('decrementBtn').addEventListener('click', () => {
+      counterDisplay.textContent = --count;
+      counterDisplay.style.transform = 'scale(0.8)';
+      setTimeout(() => counterDisplay.style.transform = 'scale(1)', 150);
+    });
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      count = 0;
+      counterDisplay.textContent = 0;
+    });
+
+    // Color Generator
+    const colorPreview = document.getElementById('colorPreview');
+    const colorCode = document.getElementById('colorCode');
+    function generateRandomColor() {
+      const hex = '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
+      colorPreview.style.background = hex;
+      colorCode.textContent = hex.toUpperCase();
+    }
+    document.getElementById('generateColorBtn').addEventListener('click', generateRandomColor);
+
+    // Copy color
+    document.getElementById('copyColorBtn').addEventListener('click', () => {
+      navigator.clipboard.writeText(colorCode.textContent).then(() => {
+        showToast('Color copied to clipboard!');
+      });
+    });
+
+    // Toast notification
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toastMsg');
+      toastMsg.textContent = msg;
+      toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+      toast.classList.add('translate-y-0', 'opacity-100');
+      setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+        toast.classList.remove('translate-y-0', 'opacity-100');
+      }, 2500);
+    }
+
+    // Navbar scroll effect
+    let lastScroll = 0;
+    window.addEventListener('scroll', () => {
+      const navbar = document.getElementById('navbar');
+      const currentScroll = window.pageYOffset;
+      if (currentScroll > 100) {
+        navbar.classList.add('py-3');
+        navbar.classList.remove('py-4');
+      } else {
+        navbar.classList.add('py-4');
+        navbar.classList.remove('py-3');
+      }
+      lastScroll = currentScroll;
+    });
+  </script>
+</body>
+</html>
